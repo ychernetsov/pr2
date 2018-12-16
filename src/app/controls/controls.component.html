@@ -1,0 +1,9 @@
+<button (click)="startRace()"
+        class="btn start"> Start Race </button>
+<button (click)="addPony()"
+        class="btn add"> Add Pony </button>
+        
+<form #f="ngForm" (ngSubmit)="onSubmit(f)" *ngIf="addPonyForm">
+  <input name="name" placeholder="please type Pony name" ngModel required>
+  <button [disabled]="!f.valid" class="btn add" type="submit">Confirm</button>
+</form>

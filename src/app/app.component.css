@@ -1,0 +1,10 @@
+app-races {
+    padding-top: 10%;
+    height: 100%;
+    display: block;
+}
+
+app-controls {
+    display: flex;
+    justify-content: center
+}

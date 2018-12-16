@@ -1,0 +1,11 @@
+<div class="race">
+  <div class="img-container" [ngStyle]="{left: race.offset, border: borderRace}">
+    <img class="pony-img" [src]="race.src"> 
+    <span class="pony-popover"> {{ race.name }} ( {{ race.scores }} )</span>
+    <button *ngIf="!raceStarted"
+            (click)="removeRace(index)"
+            class="remove-pony">X</button>
+  </div>
+</div>
+<div class="finish" #finishEl></div>
+<!-- [style.border]="randomColor()"" -->
