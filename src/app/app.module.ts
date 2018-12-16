@@ -4,8 +4,8 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RacesComponent } from './races/races.component';
-import { RaceComponent } from './race/race.component';
-import { ControlsComponent } from './controls/controls.component';
+import { RaceComponent } from './races/race/race.component';
+import { ControlsComponent } from './races/controls/controls.component';
 import { FormsModule } from '@angular/forms';
 
 @NgModule({

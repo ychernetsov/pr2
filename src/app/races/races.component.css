@@ -4,3 +4,8 @@ pr-race {
     display: block;
     display: flex;
 }
+
+app-controls {
+    display: flex;
+    justify-content: center;
+}

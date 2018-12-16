@@ -9,8 +9,9 @@ export class RaceService {
   racesChanged = new Subject<RaceModel[]>();
   src: string = "https://www.clipartmax.com/png/small/1-13464_dtrace-pony-created-by-general-zois-pony-creator-dtrace-cute-pony-shot.png";
   private races: RaceModel[] = [
-    new RaceModel("Arthur", 0, this.src, "0px"),
-    new RaceModel("Pipa", 0, this.src, "0px")
+    new RaceModel("Arthur", 0, this.src),
+    new RaceModel("Pipa", 0, this.src),
+    new RaceModel("Puppa", 0, this.src)
   ]
   constructor() { }
 
@@ -27,7 +28,7 @@ export class RaceService {
     const name = n;
     const scores = 0;
     const src = this.src;
-    const newRace = new RaceModel(name, scores, this.src, "0px");
+    const newRace = new RaceModel(name, scores, this.src);
     this.races.push(newRace);
     this.racesChanged.next(this.races.slice())
   }

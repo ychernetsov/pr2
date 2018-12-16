@@ -1,2 +1,2 @@
-<pr-race [race]="race" [index]="i" [randomColor]="rColor" *ngFor="let race of races; let i = index"></pr-race>
-
+<pr-race [event]="racesStartedEvent" [race]="race" [index]="i" *ngFor="let race of races; let i = index" [finishedAlready]="poniesFinished"></pr-race>
+<app-controls (raceStarted)="racesAreStarted($event)"></app-controls>
