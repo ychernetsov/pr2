@@ -9,7 +9,10 @@
     opacity: 1;
     cursor: pointer;
 }
-
+.btn:disabled {
+    background-color: grey!important;
+    opacity: .7;
+}
 .btn.add {
     background-color: #784a9a;
 }

@@ -1,5 +1,7 @@
-<button (click)="startRace()"
-        class="btn start"> Start Race </button>
+<button *ngIf="poniesAreAboutToFinish.value > 0" [disabled]="raceRuns" (click)="startRace()"
+        class="btn start">Start Race</button>
+<button *ngIf="poniesAreAboutToFinish.value === 0" (click)="toStart()"
+        class="btn start">To the start</button>
 <button (click)="addPony()"
         class="btn add"> Add Pony </button>
         

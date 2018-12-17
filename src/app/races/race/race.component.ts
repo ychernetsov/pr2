@@ -14,12 +14,14 @@ export class RaceComponent implements OnInit, OnChanges {
   @Input() race: RaceModel;
   @Input() index: number;
   @Input() event: any;
-  @Input() finishedAlready: BehaviorSubject<number>
-
+  @Input() poniesAreAboutToFinish: BehaviorSubject<number>
+  @Input() startPos: any;
+  @Input() raceLength: number;
   run: string = "0px";
   initialState: number = 0;
   interval;
   randomColor: string;
+
   //private subscription: Subscription;
   constructor(private raceService: RaceService) {}
   private randomColorBorder() {
@@ -28,7 +30,6 @@ export class RaceComponent implements OnInit, OnChanges {
     for (let i = 0; i < 6; i++) {
       color += letters[Math.floor(Math.random() * 16)];
     }
-    console.log(color)
     return `10px solid ${color}`;
   }
   ngOnInit() {
@@ -37,12 +38,16 @@ export class RaceComponent implements OnInit, OnChanges {
   }
   
   ngOnChanges(changes: SimpleChanges) {
-    if(changes.event.currentValue) this.movePony();
+    console.log(changes)
+    if(changes.event && changes.event.currentValue) this.movePony();
+    if(changes.startPos && changes.startPos.currentValue) {
+      this.run = "0px";
+    }
   }
 
   trackFinishedPonies() {
-    const newValue = this.finishedAlready.value + 1;
-    this.finishedAlready.next(newValue)
+    const newValue = this.poniesAreAboutToFinish.value - 1;
+    this.poniesAreAboutToFinish.next(newValue)
   }
   movePony() {
     this.interval = setInterval(()=> {
@@ -50,14 +55,18 @@ export class RaceComponent implements OnInit, OnChanges {
     this.run = `${incr}px`;
     if(incr >= this.finishElOffset) {
       this.trackFinishedPonies();
-      const place = this.finishedAlready.value;
-      console.log(`${place} place - ${this.race.name}`)
+      //const raceLength = this.raceService.getReces().length;
+      console.log("length ", this.raceLength)
+      const place = this.poniesAreAboutToFinish.value;
+      console.log(`${this.raceLength - place} place - ${this.race.name}`)
         clearInterval(this.interval);
+        this.initialState = 0;
       }
     }, 50);
   }
   removeRace(index: number) {
-    this.raceService.deleteRace(index)
-    console.log(this.raceService.getReces())
+    this.raceService.deleteRace(index);
+    this.raceLength = this.raceLength - 1;
+    this.poniesAreAboutToFinish.next(this.raceLength);
   }
 }

@@ -12,13 +12,16 @@ export class RacesComponent implements OnInit, OnDestroy {
 
   races: RaceModel[] = [];
   public racesStartedEvent: any;
-  //poniesFinished: number = 0;
-  poniesFinished = new BehaviorSubject(0);
+  public toStartPosition: any;
+  raceLength: number;
+  poniesAreAboutToFinish;
   private subscription: Subscription;
   constructor(private raceService: RaceService) { }
 
   ngOnInit() {
     this.races = this.raceService.getReces();
+    this.raceLength = this.races.length;
+    this.poniesAreAboutToFinish = new BehaviorSubject(this.raceLength);
     this.subscription = this.raceService.racesChanged
       .subscribe(
         ((races: RaceModel[]) => {
@@ -30,6 +33,11 @@ export class RacesComponent implements OnInit, OnDestroy {
   racesAreStarted(event: any) {
     this.racesStartedEvent = event;
   }
+
+  toStartPos(event: any) {
+    this.toStartPosition = event;
+  }
+
   ngOnDestroy() {
     this.subscription.unsubscribe()
   }
