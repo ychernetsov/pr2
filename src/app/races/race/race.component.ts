@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, OnChanges, SimpleChanges } from '@angular/core';
 import { RaceModel } from '../../race.model';
 import { RaceService } from '../../race.service';
-import { Subscription, BehaviorSubject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'pr-race',
@@ -22,7 +22,6 @@ export class RaceComponent implements OnInit, OnChanges {
   interval;
   randomColor: string;
 
-  //private subscription: Subscription;
   constructor(private raceService: RaceService) {}
   private randomColorBorder() {
     const letters = '0123456789ABCDEF';
@@ -38,11 +37,8 @@ export class RaceComponent implements OnInit, OnChanges {
   }
   
   ngOnChanges(changes: SimpleChanges) {
-    console.log(changes)
     if(changes.event && changes.event.currentValue) this.movePony();
-    if(changes.startPos && changes.startPos.currentValue) {
-      this.run = "0px";
-    }
+    if(changes.startPos && changes.startPos.currentValue) this.run = "0px";
   }
 
   trackFinishedPonies() {
@@ -55,12 +51,15 @@ export class RaceComponent implements OnInit, OnChanges {
     this.run = `${incr}px`;
     if(incr >= this.finishElOffset) {
       this.trackFinishedPonies();
-      //const raceLength = this.raceService.getReces().length;
-      console.log("length ", this.raceLength)
-      const place = this.poniesAreAboutToFinish.value;
-      console.log(`${this.raceLength - place} place - ${this.race.name}`)
+      
+      const place = this.raceLength - this.poniesAreAboutToFinish.value;
+      const points = place === 1 ? 3 : place === 2 ? 2 : place === 3 ? 1 : 0;
+      console.log(`${place} place - ${this.race.name}, gets ${points} points`)
         clearInterval(this.interval);
         this.initialState = 0;
+        const name = this.race.name;
+        const newScore = this.race.scores + points;
+        this.raceService.updateRaceScore(name, newScore);
       }
     }, 50);
   }

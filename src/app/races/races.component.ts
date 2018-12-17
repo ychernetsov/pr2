@@ -26,6 +26,7 @@ export class RacesComponent implements OnInit, OnDestroy {
       .subscribe(
         ((races: RaceModel[]) => {
           this.races = races;
+          this.raceLength = this.races.length;
         })
       )
   }

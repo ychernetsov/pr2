@@ -50,14 +50,15 @@
 .pony-popover {
     display: none;
     color: white;
-    width: 72px;
+    width: auto;
     height: 17px;
-    padding-top: 2px;
+    padding: 2px;
     text-align: center;
     vertical-align: middle;
     font-size: 12px;
     position: absolute;
-    top: -22px;
+    top: -33px;
+    white-space: nowrap;
     left: 0;
     background: #88b7d5;
     border: 1px solid #c2e1f5;

@@ -2,7 +2,9 @@
         class="btn start">Start Race</button>
 <button *ngIf="poniesAreAboutToFinish.value === 0" (click)="toStart()"
         class="btn start">To the start</button>
-<button (click)="addPony()"
+<button *ngIf="!addPonyForm"
+        (click)="addPony()"
+        [disabled]="raceRuns"
         class="btn add"> Add Pony </button>
         
 <form #f="ngForm" (ngSubmit)="onSubmit(f)" *ngIf="addPonyForm">

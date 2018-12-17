@@ -23,8 +23,6 @@ export class ControlsComponent implements OnInit {
   constructor(private raceService: RaceService) { }
 
   ngOnInit() {
-    
-    console.log(this.raceStarted)
     this.races = this.raceService.getReces();
     this.subscription = this.raceService.racesChanged
       .subscribe(

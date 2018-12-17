@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { RaceModel } from './race.model';
-import { Subject } from 'rxjs';
+import { Subject, race } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -32,8 +32,10 @@ export class RaceService {
     this.races.push(newRace);
     this.racesChanged.next(this.races.slice())
   }
-  updateRace(index: number, updatedRace: RaceModel) { 
-    this.races[index] = updatedRace;
+  updateRaceScore(name: string, newScore: number) { 
+    for(let race of this.races) {
+      if(race.name === name) race.scores = newScore;
+    }
     this.racesChanged.next(this.races.slice())
   }
 }
