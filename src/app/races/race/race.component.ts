@@ -14,10 +14,11 @@ export class RaceComponent implements OnInit, OnChanges {
   @Input() race: RaceModel;
   @Input() index: number;
   @Input() event: any;
-  @Input() poniesAreAboutToFinish: BehaviorSubject<number>
+  @Input() poniesAreAboutToFinish: BehaviorSubject<number>;
   @Input() startPos: any;
   @Input() raceLength: number;
   run: string = "0px";
+  randomTop: string = "0px";
   initialState: number = 0;
   interval;
   randomColor: string;
@@ -43,18 +44,20 @@ export class RaceComponent implements OnInit, OnChanges {
 
   trackFinishedPonies() {
     const newValue = this.poniesAreAboutToFinish.value - 1;
-    this.poniesAreAboutToFinish.next(newValue)
+    this.poniesAreAboutToFinish.next(newValue);
   }
   movePony() {
     this.interval = setInterval(()=> {
-    const incr = this.initialState += Math.floor(Math.random() * 30)
+    const incr = this.initialState += Math.floor(Math.random() * 30);
     this.run = `${incr}px`;
+    const rTop = Math.floor(Math.random()*3) > 1 ? 2 : -2;
+    this.randomTop = `${rTop}px`;
     if(incr >= this.finishElOffset) {
       this.trackFinishedPonies();
       
       const place = this.raceLength - this.poniesAreAboutToFinish.value;
       const points = place === 1 ? 3 : place === 2 ? 2 : place === 3 ? 1 : 0;
-      console.log(`${place} place - ${this.race.name}, gets ${points} points`)
+      console.log(`${place} place - ${this.race.name}, gets ${points} points`);
         clearInterval(this.interval);
         this.initialState = 0;
         const name = this.race.name;

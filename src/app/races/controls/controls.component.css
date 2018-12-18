@@ -16,7 +16,9 @@
 .btn.add {
     background-color: #784a9a;
 }
-
+.btn.cancel {
+    background-color: #c73939;
+}
 .btn.start {
     background-color: #477914;
 }
@@ -26,6 +28,7 @@
 
 form {
     display: flex;
+    position: relative;
 }
 
 form input {
@@ -34,4 +37,12 @@ form input {
     border: 1px solid #c1b8b8;
     padding-left: 5px;
     align-self: center;
+}
+
+.name-error-tooltip {
+    position: absolute;
+    top: -10px;
+    color: red;
+    left: 4px;
+    opacity: 0.7;
 }

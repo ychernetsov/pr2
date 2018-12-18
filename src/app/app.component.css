@@ -2,4 +2,5 @@ app-races {
     padding-top: 10%;
     height: 100%;
     display: block;
+    position: relative;
 }

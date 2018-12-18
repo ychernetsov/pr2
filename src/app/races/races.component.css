@@ -8,4 +8,13 @@ pr-race {
 app-controls {
     display: flex;
     justify-content: center;
+    bottom: 50px;
+}
+app-show-information {
+    position: absolute;
+    top: 0;
+    left: 100px;
+    white-space: nowrap;
+    width: auto;
+    font-family: monospace;
 }

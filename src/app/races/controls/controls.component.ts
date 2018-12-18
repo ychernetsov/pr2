@@ -18,6 +18,7 @@ export class ControlsComponent implements OnInit {
   @Input() poniesAreAboutToFinish: BehaviorSubject<number>;
   @Input() raceLength: number;
   raceRuns: boolean = false;
+  isNameValid: boolean = false;
 
   private subscription: Subscription;
   constructor(private raceService: RaceService) { }
@@ -34,10 +35,14 @@ export class ControlsComponent implements OnInit {
 
   addPony() {
     this.addPonyForm = true;
-    this.raceLength = this.raceLength + 1;
-    this.poniesAreAboutToFinish.next(this.raceLength);
+    
+  }
+  validateName(val: string) {
+    this.isNameValid = this.raceService.validateName(val);
   }
   onSubmit(f: NgForm) {
+    this.raceLength = this.raceLength + 1;
+    this.poniesAreAboutToFinish.next(this.raceLength);
     this.raceService.addRace(f.value.name)
     this.addPonyForm = false;
   }
@@ -53,5 +58,9 @@ export class ControlsComponent implements OnInit {
     this.raceRuns = false;
     this.poniesAreAboutToFinish.next(this.raceLength);
     this.newRace.emit(true);
+  }
+
+  cancel() {
+    this.addPonyForm = false;
   }
 }

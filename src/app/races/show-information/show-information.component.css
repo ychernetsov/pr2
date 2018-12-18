@@ -1,0 +1,19 @@
+.show-notification {
+    position: relative;
+    margin: 50% 100%;
+    color: red;
+    font-size: 20px;
+    font-family: monospace;
+    opacity: .6;
+}
+
+.score-list {
+    border: 1px solid tomato;
+    border-radius: 10px;
+    padding-inline-start: 0;
+    padding: 15px;
+}
+
+.score-list li {
+    list-style: none;
+}

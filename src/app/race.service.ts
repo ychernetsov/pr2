@@ -38,4 +38,16 @@ export class RaceService {
     }
     this.racesChanged.next(this.races.slice())
   }
+
+  validateName(name: string): boolean {
+    return this.races.some(val => {
+      return val.name === name;
+    });
+  }
+
+  sortRaces(races: RaceModel[]) {
+   return this.races.slice().sort((a,b) => {
+      return b.scores  - a.scores;
+    });
+  }
 }

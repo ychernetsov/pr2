@@ -1,0 +1,6 @@
+<div *ngIf="raceLength > 1" class="show-scores">
+  <ul class="score-list">
+    <li *ngFor="let race of races; let i = index">{{i+1}} place - {{race.name}}, with {{race.scores}} points</li>
+  </ul>
+</div>
+<div *ngIf="raceLength < 2" class="show-notification">Race Can't start with less than 2 Ponies</div> 
