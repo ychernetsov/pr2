@@ -50,4 +50,10 @@ export class RaceService {
       return b.scores  - a.scores;
     });
   }
+
+  resetScores() {
+    this.races.forEach(val => {
+      val.scores = 0;
+    });
+  }
 }

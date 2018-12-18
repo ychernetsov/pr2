@@ -1,3 +1,8 @@
+.show-scores {
+    display: flex;
+    flex-wrap: wrap;
+    width: 415px;
+}
 .show-notification {
     position: relative;
     margin: 50% 100%;
@@ -12,8 +17,32 @@
     border-radius: 10px;
     padding-inline-start: 0;
     padding: 15px;
+    width: 100%;
 }
 
 .score-list li {
     list-style: none;
+}
+.btn {
+    display: block;
+    width: 100px;
+    height: 40px;
+    border-radius: 10px;
+    border: none;
+    color: #fff;
+    margin: 10px;
+    opacity: 1;
+    cursor: pointer;
+}
+.btn:disabled {
+    background-color: grey!important;
+    opacity: .7;
+}
+.btn.cancel {
+    background-color: #c73939;
+    flex: 1;
+}
+p.race-count {
+    flex: 3;
+    font-size: 17px;
 }

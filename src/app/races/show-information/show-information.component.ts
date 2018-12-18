@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { RaceService } from 'src/app/race.service';
 import { RaceModel } from 'src/app/race.model';
 import { Subscription } from 'rxjs';
@@ -8,9 +8,11 @@ import { Subscription } from 'rxjs';
   templateUrl: './show-information.component.html',
   styleUrls: ['./show-information.component.css']
 })
-export class ShowInformationComponent implements OnInit {
+export class ShowInformationComponent implements OnInit, OnChanges {
   @Input() raceLength: number;
+  @Input() event:any;
   races: RaceModel[];
+  raceCount: number = 0;
   
   private subscription: Subscription
   constructor(private raceService: RaceService) { }
@@ -25,4 +27,12 @@ export class ShowInformationComponent implements OnInit {
     )
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if(changes.event && changes.event.currentValue) this.raceCount++
+  }
+
+  reset() {
+    this.raceService.resetScores();
+    this.raceCount = 0;
+  }
 }
