@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { RaceModel } from '../../race.model';
 import { RaceService } from '../../race.service';
 import { BehaviorSubject } from 'rxjs';
@@ -17,11 +17,13 @@ export class RaceComponent implements OnInit, OnChanges {
   @Input() poniesAreAboutToFinish: BehaviorSubject<number>;
   @Input() startPos: any;
   @Input() raceLength: number;
+  @Input() raceResults;// = new EventEmitter<any>();
   run: string = "0px";
   randomTop: string = "0px";
   initialState: number = 0;
   interval;
   randomColor: string;
+  @Input() raceResultsArr: Array<any>;
 
   constructor(private raceService: RaceService) {}
   private randomColorBorder() {
@@ -31,6 +33,10 @@ export class RaceComponent implements OnInit, OnChanges {
       color += letters[Math.floor(Math.random() * 16)];
     }
     return `10px solid ${color}`;
+  }
+
+  private ordinalIndicator(place: number) {
+    return place === 1 ? "st" : place === 2 ? "nd" : place === 3 ? "rd" : "th"
   }
   ngOnInit() {
     this.randomColor = this.randomColorBorder();
@@ -57,14 +63,18 @@ export class RaceComponent implements OnInit, OnChanges {
       
       const place = this.raceLength - this.poniesAreAboutToFinish.value;
       const points = place === 1 ? 3 : place === 2 ? 2 : place === 3 ? 1 : 0;
-      console.log(`${place} place - ${this.race.name}, gets ${points} points`);
+      
+      console.log(`${this.race.name} finishes ${place}${this.ordinalIndicator(place)}  and gets ${points} point(s)`);
         clearInterval(this.interval);
         this.initialState = 0;
         const name = this.race.name;
         const newScore = this.race.scores + points;
         this.raceService.updateRaceScore(name, newScore);
+        console.log("aaaa ", this.raceResultsArr, this.race.name, place, points)
+        this.raceResultsArr.push({"name":this.race.name, place, points});
       }
     }, 50);
+    console.log("interval finished")
   }
   removeRace(index: number) {
     this.raceService.deleteRace(index);

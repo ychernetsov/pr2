@@ -1,27 +1,33 @@
 .show-scores {
     display: flex;
     flex-wrap: wrap;
-    width: 415px;
+    width: 650px;
+    justify-content: space-between;
 }
 .show-notification {
     position: relative;
-    margin: 50% 100%;
+    margin: 0 34%;
     color: red;
     font-size: 20px;
     font-family: monospace;
     opacity: .6;
+    top: 90px;
 }
 
 .score-list {
     border: 1px solid tomato;
     border-radius: 10px;
     padding-inline-start: 0;
-    padding: 15px;
-    width: 100%;
+    padding: 5px 15px 15px 15px;
+    width: 44%;
+    overflow: hidden;
 }
 
 .score-list li {
     list-style: none;
+}
+.score-list li:first-child {
+    margin-bottom: 10px;
 }
 .btn {
     display: block;

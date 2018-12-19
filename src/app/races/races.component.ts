@@ -13,6 +13,9 @@ export class RacesComponent implements OnInit, OnDestroy {
   races: RaceModel[] = [];
   public racesStartedEvent: any;
   public toStartPosition: any;
+  public currentRaceResults: any;
+  public raceResultsArr: Array<any> = [];
+
   raceLength: number;
   poniesAreAboutToFinish;
   private subscription: Subscription;
@@ -32,6 +35,7 @@ export class RacesComponent implements OnInit, OnDestroy {
   }
 
   racesAreStarted(event: any) {
+    this.raceResultsArr = [];
     this.racesStartedEvent = event;
   }
 
@@ -39,6 +43,9 @@ export class RacesComponent implements OnInit, OnDestroy {
     this.toStartPosition = event;
   }
 
+  getCurrentRaceResults(event: any) {
+    this.currentRaceResults = event;
+  }
   ngOnDestroy() {
     this.subscription.unsubscribe()
   }

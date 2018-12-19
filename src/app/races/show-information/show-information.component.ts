@@ -11,13 +11,20 @@ import { Subscription } from 'rxjs';
 export class ShowInformationComponent implements OnInit, OnChanges {
   @Input() raceLength: number;
   @Input() event:any;
+  @Input() raceResults;
+  @Input() raceResultsArr;
   races: RaceModel[];
   raceCount: number = 0;
-  
-  private subscription: Subscription
+  //ordinalIndicatorValue: string;
+  private subscription: Subscription;
+
+  ordinalIndicator(place: number) {
+    return place === 1 ? "st" : place === 2 ? "nd" : place === 3 ? "rd" : "th"
+  }
   constructor(private raceService: RaceService) { }
 
   ngOnInit() {
+    
     this.races = this.raceService.getReces();
     this.subscription = this.raceService.racesChanged
       .subscribe(
@@ -28,6 +35,7 @@ export class ShowInformationComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    console.log("show ", this.raceResultsArr)
     if(changes.event && changes.event.currentValue) this.raceCount++
   }
 
