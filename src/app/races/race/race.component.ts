@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, OnChanges, SimpleChanges, Output, EventEmitter, HostListener } from '@angular/core';
 import { RaceModel } from '../../race.model';
 import { RaceService } from '../../race.service';
 import { BehaviorSubject } from 'rxjs';
@@ -25,7 +25,9 @@ export class RaceComponent implements OnInit, OnChanges {
   randomColor: string;
   @Input() raceResultsArr: Array<any>;
 
-  constructor(private raceService: RaceService) {}
+  constructor(private raceService: RaceService) {
+
+  }
   private randomColorBorder() {
     const letters = '0123456789ABCDEF';
     let color = '#';
@@ -38,6 +40,7 @@ export class RaceComponent implements OnInit, OnChanges {
   private ordinalIndicator(place: number) {
     return place === 1 ? "st" : place === 2 ? "nd" : place === 3 ? "rd" : "th"
   }
+
   ngOnInit() {
     this.randomColor = this.randomColorBorder();
     this.finishElOffset = this.raceFinishEl.nativeElement.offsetWidth - this.raceFinishEl.nativeElement.childNodes[0].clientWidth;
@@ -46,6 +49,12 @@ export class RaceComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if(changes.event && changes.event.currentValue) this.movePony();
     if(changes.startPos && changes.startPos.currentValue) this.run = "0px";
+  }
+
+  changeOrientation($event) {
+    setTimeout(()=> {
+      this.finishElOffset = this.raceFinishEl.nativeElement.offsetWidth - this.raceFinishEl.nativeElement.childNodes[0].clientWidth;
+    }, 100);
   }
 
   trackFinishedPonies() {
@@ -70,11 +79,9 @@ export class RaceComponent implements OnInit, OnChanges {
         const name = this.race.name;
         const newScore = this.race.scores + points;
         this.raceService.updateRaceScore(name, newScore);
-        console.log("aaaa ", this.raceResultsArr, this.race.name, place, points)
         this.raceResultsArr.push({"name":this.race.name, place, points});
       }
     }, 50);
-    console.log("interval finished")
   }
   removeRace(index: number) {
     this.raceService.deleteRace(index);

@@ -52,3 +52,21 @@ p.race-count {
     flex: 3;
     font-size: 17px;
 }
+@media screen and (max-width: 812px) {
+    p.race-count {
+        font-size: 13px;
+        margin: 0;
+    }
+    .btn.cancel {
+        font-size: 12px;
+        height: 25px;
+        margin: 0 0 10px 0;
+    }
+    .score-list li:first-child {
+        margin-bottom: 2px;
+    }
+    .show-notification {
+        margin: 0 20%;
+        top: 200px;
+    }
+}

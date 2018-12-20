@@ -35,7 +35,6 @@ export class ShowInformationComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log("show ", this.raceResultsArr)
     if(changes.event && changes.event.currentValue) this.raceCount++
   }
 

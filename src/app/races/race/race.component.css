@@ -83,3 +83,31 @@
     display: none;
     cursor: pointer;
 }
+
+@media screen and (max-width: 812px) {
+    .img-container {
+        width: 41px;
+        border-width: 3px!Important;
+        margin: 0;
+    }
+
+    .show-scores {
+        font-size: 11px;
+    }
+
+    .finish {
+        width: 11%;
+        background-size: 20px 20px;
+        background-position: 0 0, 10px 10px;
+    }
+
+    .remove-pony {
+        width: 13px;
+        height: 13px;
+    }
+    .pony-popover {
+        font-size: 10px;
+        height: 12px;
+        top: -24px;
+    }
+}

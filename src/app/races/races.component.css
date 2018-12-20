@@ -8,7 +8,6 @@ pr-race {
 app-controls {
     display: flex;
     justify-content: center;
-    margin-top: 100px;
     position: relative;
 }
 app-show-information {
@@ -18,4 +17,14 @@ app-show-information {
     white-space: nowrap;
     width: auto;
     font-family: monospace;
+}
+@media screen and (max-width: 812px) {
+    pr-race {
+        width: 85%;
+        height: 70px;
+    }
+    app-show-information
+    {
+        left: 0;
+    }
 }
