@@ -1,52 +1,31 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { RaceModel } from '../race.model';
-import { RaceService } from '../race.service';
-import { Subscription, BehaviorSubject } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+import * as fromApp from '../store/app.reducers';
+import * as fromPonyRacer from './store/ponyracer.reducers';
 
 @Component({
   selector: 'app-races',
   templateUrl: './races.component.html',
   styleUrls: ['./races.component.css']
 })
-export class RacesComponent implements OnInit, OnDestroy {
+export class RacesComponent implements OnInit {
 
-  races: RaceModel[] = [];
+  racesState: Observable<fromPonyRacer.State>;
   public racesStartedEvent: any;
   public toStartPosition: any;
-  public currentRaceResults: any;
-  public raceResultsArr: Array<any> = [];
 
   raceLength: number;
-  poniesAreAboutToFinish;
-  private subscription: Subscription;
-  constructor(private raceService: RaceService) { }
+  constructor(private store: Store<fromApp.AppState>) { }
 
   ngOnInit() {
-    this.races = this.raceService.getReces();
-    this.raceLength = this.races.length;
-    this.poniesAreAboutToFinish = new BehaviorSubject(this.raceLength);
-    this.subscription = this.raceService.racesChanged
-      .subscribe(
-        ((races: RaceModel[]) => {
-          this.races = races;
-          this.raceLength = this.races.length;
-        })
-      )
+    this.racesState = this.store.select("raceList");
+    this.racesState.pipe(
+    ).subscribe(races => { 
+      this.raceLength = races.races.length;
+      this.racesStartedEvent = races;
+      this.toStartPosition = races.isNewrace;
+    })
   }
 
-  racesAreStarted(event: any) {
-    this.raceResultsArr = [];
-    this.racesStartedEvent = event;
-  }
-
-  toStartPos(event: any) {
-    this.toStartPosition = event;
-  }
-
-  getCurrentRaceResults(event: any) {
-    this.currentRaceResults = event;
-  }
-  ngOnDestroy() {
-    this.subscription.unsubscribe()
-  }
 }

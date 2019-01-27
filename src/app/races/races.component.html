@@ -1,16 +1,7 @@
-<app-show-information [raceResultsArr]="raceResultsArr" [raceResults]="currentRaceResults" [event]="racesStartedEvent" [raceLength]="raceLength"></app-show-information>
-<pr-race [event]="racesStartedEvent" 
-         [race]="race" [index]="i" 
-         *ngFor="let race of races; let i = index" 
-         [raceLength]="raceLength"
-         [poniesAreAboutToFinish]="poniesAreAboutToFinish"
-         [startPos]="toStartPosition"
-         [raceResultsArr]="raceResultsArr"
-         (raceResults) ="getCurrentRaceResults($event)">
+<app-show-information></app-show-information>
+<pr-race *ngFor="let race of (racesState | async).races; let i = index" 
+         [race]="race" [index]="i"
+         [startPos]="toStartPosition">
 </pr-race>
 
-<app-controls [raceLength]="raceLength" 
-              [poniesAreAboutToFinish]="poniesAreAboutToFinish" 
-              (raceStarted)="racesAreStarted($event)"
-              (newRace)="toStartPos($event)">
-</app-controls>   
+<app-controls></app-controls>   

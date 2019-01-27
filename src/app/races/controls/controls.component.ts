@@ -1,8 +1,12 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { RaceService } from '../../race.service';
-import { Subscription, BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { RaceModel } from '../../race.model';
+import { Store } from '@ngrx/store';
+import * as PonyRacerActions from '../store/ponyracer.actions';
+import { tap } from 'rxjs/operators';
+import * as fromApp from '../../store/app.reducers';
+import * as fromPonyRacer from '../store/ponyracer.reducers';
 
 @Component({
   selector: 'app-controls',
@@ -12,52 +16,50 @@ import { RaceModel } from '../../race.model';
 export class ControlsComponent implements OnInit {
   addPonyForm = false;
   races: RaceModel[] = [];
-  @Output() raceStarted = new EventEmitter<any>();
-  @Output() newRace = new EventEmitter<any>();
-
-  @Input() poniesAreAboutToFinish: BehaviorSubject<number>;
-  @Input() raceLength: number;
+  raceLength: number;
+  poniesAreAboutToFinish: number;
   raceRuns: boolean = false;
   isNameValid: boolean = false;
+  racesState: Observable<fromPonyRacer.State>;
 
-  private subscription: Subscription;
-  constructor(private raceService: RaceService) { }
+  constructor(private store: Store<fromApp.AppState>) { }
 
   ngOnInit() {
-    this.races = this.raceService.getReces();
-    this.subscription = this.raceService.racesChanged
+    this.racesState = this.store.select("raceList");
+    this.racesState
       .subscribe(
-        ((races: RaceModel[]) => {
-          this.races = races;
-        })
-    )
+        (racesState: fromPonyRacer.State) => {
+          this.raceLength = racesState.races.length;
+          this.poniesAreAboutToFinish = racesState.poniesAreAboutToFinish;
+        }
+      )
   }
 
   addPony() {
     this.addPonyForm = true;
-    
   }
-  validateName(val: string) {
-    this.isNameValid = this.raceService.validateName(val);
+  validateName(value: string) {
+     this.racesState.pipe(
+     tap(races => this.isNameValid = races.races.some(val => {
+          return val.name === value
+      })
+     )
+    ).subscribe();
   }
   onSubmit(f: NgForm) {
-    this.raceLength = this.raceLength + 1;
-    this.poniesAreAboutToFinish.next(this.raceLength);
-    this.raceService.addRace(f.value.name)
+    this.store.dispatch(new PonyRacerActions.AddPony(f.value.name))
     this.addPonyForm = false;
   }
 
   startRace() {
-    this.newRace.emit(false);
+    this.store.dispatch(new PonyRacerActions.IsNewrace(true))
     this.raceRuns = true;
-    this.raceStarted.emit(true);
+    this.store.dispatch(new PonyRacerActions.StartRace())
   }
 
   toStart() {
-    this.raceStarted.emit(false);
     this.raceRuns = false;
-    this.poniesAreAboutToFinish.next(this.raceLength);
-    this.newRace.emit(true);
+    this.store.dispatch(new PonyRacerActions.IsNewrace(false))
   }
 
   cancel() {

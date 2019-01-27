@@ -1,7 +1,10 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, OnChanges, SimpleChanges, Output, EventEmitter, HostListener } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, OnChanges, SimpleChanges } from '@angular/core';
 import { RaceModel } from '../../race.model';
-import { RaceService } from '../../race.service';
-import { BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+import * as fromApp from '../../store/app.reducers';
+import * as PonyRacerActions from '../store/ponyracer.actions';
+import * as fromPonyRacer from '../store/ponyracer.reducers';
 
 @Component({
   selector: 'pr-race',
@@ -13,19 +16,18 @@ export class RaceComponent implements OnInit, OnChanges {
   finishElOffset: number;
   @Input() race: RaceModel;
   @Input() index: number;
-  @Input() event: any;
-  @Input() poniesAreAboutToFinish: BehaviorSubject<number>;
   @Input() startPos: any;
-  @Input() raceLength: number;
-  @Input() raceResults;// = new EventEmitter<any>();
+  raceLength: number;
   run: string = "0px";
   randomTop: string = "0px";
   initialState: number = 0;
   interval;
   randomColor: string;
-  @Input() raceResultsArr: Array<any>;
+  poniesAreAboutToFinish: number;
+  racesState: Observable<fromPonyRacer.State>;
+  raceStarted: boolean;
 
-  constructor(private raceService: RaceService) {
+  constructor(private store: Store<fromApp.AppState>) {
 
   }
   private randomColorBorder() {
@@ -44,11 +46,19 @@ export class RaceComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.randomColor = this.randomColorBorder();
     this.finishElOffset = this.raceFinishEl.nativeElement.offsetWidth - this.raceFinishEl.nativeElement.childNodes[0].clientWidth;
+    this.racesState = this.store.select("raceList");
+    this.racesState
+    .subscribe(races => {
+        this.raceLength = races.races.length;
+        this.poniesAreAboutToFinish = races.poniesAreAboutToFinish;
+        this.raceStarted = races.raceStatus;
+      })
   }
   
   ngOnChanges(changes: SimpleChanges) {
-    if(changes.event && changes.event.currentValue) this.movePony();
-    if(changes.startPos && changes.startPos.currentValue) this.run = "0px";
+    console.log(changes)
+    if(this.raceStarted) this.movePony();
+    if(this.poniesAreAboutToFinish === null) this.run = "0px";
   }
 
   changeOrientation($event) {
@@ -57,35 +67,31 @@ export class RaceComponent implements OnInit, OnChanges {
     }, 100);
   }
 
-  trackFinishedPonies() {
-    const newValue = this.poniesAreAboutToFinish.value - 1;
-    this.poniesAreAboutToFinish.next(newValue);
-  }
-  movePony() {
+  movePony(incr = 0) {
+    console.log("move pony - ", this.race.name, this.raceLength)
     this.interval = setInterval(()=> {
-    const incr = this.initialState += Math.floor(Math.random() * 30);
-    this.run = `${incr}px`;
-    const rTop = Math.floor(Math.random()*3) > 1 ? 2 : -2;
-    this.randomTop = `${rTop}px`;
-    if(incr >= this.finishElOffset) {
-      this.trackFinishedPonies();
-      
-      const place = this.raceLength - this.poniesAreAboutToFinish.value;
-      const points = place === 1 ? 3 : place === 2 ? 2 : place === 3 ? 1 : 0;
-      
-      console.log(`${this.race.name} finishes ${place}${this.ordinalIndicator(place)}  and gets ${points} point(s)`);
-        clearInterval(this.interval);
+      incr = incr + Math.floor(Math.random() * 30);
+      this.run = `${incr}px`;
+      const rTop = Math.floor(Math.random()*3) > 1 ? 2 : -2;
+      this.randomTop = `${rTop}px`;
+      if(incr >= this.finishElOffset) {
+        clearInterval(this.interval); 
+        this.run = this.finishElOffset + 'px'
+        const place = (this.raceLength - this.poniesAreAboutToFinish) + 1;
+        const points = place === 1 ? 3 : place === 2 ? 2 : place === 3 ? 1 : 0;
+        console.log(`${this.race.name} finishes ${place}${this.ordinalIndicator(place)}  and gets ${points} point(s)`);
         this.initialState = 0;
         const name = this.race.name;
         const newScore = this.race.scores + points;
-        this.raceService.updateRaceScore(name, newScore);
-        this.raceResultsArr.push({"name":this.race.name, place, points});
+        this.store.dispatch(new PonyRacerActions.UpdateRaceScore({name, newScore}));
+        //console.log({"name":this.race.name, place, points});
+        this.store.dispatch(new PonyRacerActions.StopRace({name: this.race.name, place, points})); //{"name":this.race.name, place, points}
+        
       }
     }, 50);
   }
   removeRace(index: number) {
-    this.raceService.deleteRace(index);
+    this.store.dispatch(new PonyRacerActions.DeletePony(index));
     this.raceLength = this.raceLength - 1;
-    this.poniesAreAboutToFinish.next(this.raceLength);
   }
 }

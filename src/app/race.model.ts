@@ -7,5 +7,6 @@ export class RaceModel {
         this.name = name;
         this.scores = scores;
         this.src = src;
+        
     }
 }
