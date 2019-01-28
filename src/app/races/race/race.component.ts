@@ -1,26 +1,25 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { RaceModel } from '../../race.model';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../store/app.reducers';
 import * as PonyRacerActions from '../store/ponyracer.actions';
 import * as fromPonyRacer from '../store/ponyracer.reducers';
+import { tap } from 'rxjs/operators'
 
 @Component({
   selector: 'pr-race',
   templateUrl: './race.component.html',
   styleUrls: ['./race.component.css']
 })
-export class RaceComponent implements OnInit, OnChanges {
+export class RaceComponent implements OnInit {
   @ViewChild("raceFinish") raceFinishEl: ElementRef;
   finishElOffset: number;
   @Input() race: RaceModel;
   @Input() index: number;
-  @Input() startPos: any;
   raceLength: number;
   run: string = "0px";
   randomTop: string = "0px";
-  initialState: number = 0;
   interval;
   randomColor: string;
   poniesAreAboutToFinish: number;
@@ -47,18 +46,18 @@ export class RaceComponent implements OnInit, OnChanges {
     this.randomColor = this.randomColorBorder();
     this.finishElOffset = this.raceFinishEl.nativeElement.offsetWidth - this.raceFinishEl.nativeElement.childNodes[0].clientWidth;
     this.racesState = this.store.select("raceList");
-    this.racesState
-    .subscribe(races => {
+    this.racesState.pipe(
+      tap(races => {
         this.raceLength = races.races.length;
         this.poniesAreAboutToFinish = races.poniesAreAboutToFinish;
         this.raceStarted = races.raceStatus;
+        if(this.raceStarted) this.movePony();
+        if(this.poniesAreAboutToFinish === null) this.run = "0px";
+        console.log("1 ", races.races)
+        console.log("2 ", this.race.name)
       })
-  }
-  
-  ngOnChanges(changes: SimpleChanges) {
-    console.log(changes)
-    if(this.raceStarted) this.movePony();
-    if(this.poniesAreAboutToFinish === null) this.run = "0px";
+    )
+    .subscribe()
   }
 
   changeOrientation($event) {
@@ -68,7 +67,6 @@ export class RaceComponent implements OnInit, OnChanges {
   }
 
   movePony(incr = 0) {
-    console.log("move pony - ", this.race.name, this.raceLength)
     this.interval = setInterval(()=> {
       incr = incr + Math.floor(Math.random() * 30);
       this.run = `${incr}px`;
@@ -80,18 +78,16 @@ export class RaceComponent implements OnInit, OnChanges {
         const place = (this.raceLength - this.poniesAreAboutToFinish) + 1;
         const points = place === 1 ? 3 : place === 2 ? 2 : place === 3 ? 1 : 0;
         console.log(`${this.race.name} finishes ${place}${this.ordinalIndicator(place)}  and gets ${points} point(s)`);
-        this.initialState = 0;
+        incr = 0;
         const name = this.race.name;
         const newScore = this.race.scores + points;
-        this.store.dispatch(new PonyRacerActions.UpdateRaceScore({name, newScore}));
-        //console.log({"name":this.race.name, place, points});
         this.store.dispatch(new PonyRacerActions.StopRace({name: this.race.name, place, points})); //{"name":this.race.name, place, points}
-        
+        this.store.dispatch(new PonyRacerActions.UpdateRaceScore({name, newScore}));
       }
     }, 50);
   }
+
   removeRace(index: number) {
     this.store.dispatch(new PonyRacerActions.DeletePony(index));
-    this.raceLength = this.raceLength - 1;
   }
 }

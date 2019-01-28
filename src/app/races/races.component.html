@@ -1,7 +1,6 @@
 <app-show-information></app-show-information>
 <pr-race *ngFor="let race of (racesState | async).races; let i = index" 
-         [race]="race" [index]="i"
-         [startPos]="toStartPosition">
+         [race]="race" [index]="i">
 </pr-race>
 
 <app-controls></app-controls>   
