@@ -53,8 +53,6 @@ export class RaceComponent implements OnInit {
         this.raceStarted = races.raceStatus;
         if(this.raceStarted) this.movePony();
         if(this.poniesAreAboutToFinish === null) this.run = "0px";
-        console.log("1 ", races.races)
-        console.log("2 ", this.race.name)
       })
     )
     .subscribe()
@@ -81,13 +79,14 @@ export class RaceComponent implements OnInit {
         incr = 0;
         const name = this.race.name;
         const newScore = this.race.scores + points;
-        this.store.dispatch(new PonyRacerActions.StopRace({name: this.race.name, place, points})); //{"name":this.race.name, place, points}
+        this.store.dispatch(new PonyRacerActions.StopRace({name: name, place, points})); //{"name":this.race.name, place, points}
         this.store.dispatch(new PonyRacerActions.UpdateRaceScore({name, newScore}));
       }
     }, 50);
   }
 
   removeRace(index: number) {
+    console.log("2 ", this.race.name)
     this.store.dispatch(new PonyRacerActions.DeletePony(index));
   }
 }

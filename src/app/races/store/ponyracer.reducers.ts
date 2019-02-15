@@ -34,10 +34,10 @@ export function ponyRacerReducer(state = initialState, action: PonyRacerActions.
             }
         case PonyRacerActions.DELETE_PONY:
             state.races.splice(action.payload, 1);
-            const newRaces = state.races.slice()
+            //const newRaces = state.races//.slice()
             return {
                 ...state,
-                races: newRaces,
+                races: state.races,
                 currentRaces: []
             }
         case PonyRacerActions.UPDATE_RACESCORE:

@@ -1,6 +1,6 @@
 <app-show-information></app-show-information>
-<pr-race *ngFor="let race of (racesState | async).races; let i = index" 
-         [race]="race" [index]="i">
+<pr-race *ngFor="let race of races; let i = index" 
+         [race]="race" [index]="i"> 
 </pr-race>
-
+{{races.length}}
 <app-controls></app-controls>   

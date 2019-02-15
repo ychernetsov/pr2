@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../store/app.reducers';
@@ -11,13 +11,13 @@ import * as fromPonyRacer from './store/ponyracer.reducers';
 })
 export class RacesComponent implements OnInit {
 
-  racesState: Observable<fromPonyRacer.State>;
- 
+  //racesState: Observable<fromPonyRacer.State>;
+  @Input() races;
   constructor(private store: Store<fromApp.AppState>) { }
 
   ngOnInit() {
-    this.racesState = this.store.select("raceList");
-    this.racesState.subscribe()
+    //this.racesState = this.store.select("raceList");
+    //this.racesState.subscribe()
   }
 
 }

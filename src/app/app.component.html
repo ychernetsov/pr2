@@ -1,3 +1,3 @@
-<app-races></app-races>
+<app-races [races]="(racesState | async).races"></app-races>
 <router-outlet></router-outlet>
 <div class="mobile-portrait">Please turn your mobile phone <br> into landscape mode</div>
