@@ -18,6 +18,6 @@ export class AppComponent {
 
   ngOnInit() {
     this.racesState = this.store.select("raceList");
-    this.racesState.subscribe()
+    //this.racesState.subscribe()
   }
 }

@@ -1,18 +1,18 @@
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { RaceModel } from '../../race.model';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../store/app.reducers';
 import * as PonyRacerActions from '../store/ponyracer.actions';
 import * as fromPonyRacer from '../store/ponyracer.reducers';
-import { tap } from 'rxjs/operators'
+import { tap, take } from 'rxjs/operators'
 
 @Component({
   selector: 'pr-race',
   templateUrl: './race.component.html',
   styleUrls: ['./race.component.css']
 })
-export class RaceComponent implements OnInit {
+export class RaceComponent implements OnInit, OnDestroy {
   @ViewChild("raceFinish") raceFinishEl: ElementRef;
   finishElOffset: number;
   @Input() race: RaceModel;
@@ -47,6 +47,7 @@ export class RaceComponent implements OnInit {
     this.finishElOffset = this.raceFinishEl.nativeElement.offsetWidth - this.raceFinishEl.nativeElement.childNodes[0].clientWidth;
     this.racesState = this.store.select("raceList");
     this.racesState.pipe(
+      //take(1),
       tap(races => {
         this.raceLength = races.races.length;
         this.poniesAreAboutToFinish = races.poniesAreAboutToFinish;
@@ -86,7 +87,10 @@ export class RaceComponent implements OnInit {
   }
 
   removeRace(index: number) {
-    console.log("2 ", this.race.name)
     this.store.dispatch(new PonyRacerActions.DeletePony(index));
+  }
+
+  ngOnDestroy() {
+    //this.racesState.unsubscribe()
   }
 }

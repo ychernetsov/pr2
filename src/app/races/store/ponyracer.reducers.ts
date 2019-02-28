@@ -70,11 +70,12 @@ export function ponyRacerReducer(state = initialState, action: PonyRacerActions.
         case PonyRacerActions.STOP_RACE:
             state.raceStatus = false;
             const allPonies = state.poniesAreAboutToFinish || state.races.length;
+            const finsihed = state.currentRaces.slice()
             return {
                 ...state,
                 races: state.races,
                 poniesAreAboutToFinish: allPonies - 1,
-                currentRaces: [...state.currentRaces, action.payload]
+                currentRaces: [...finsihed,action.payload]
             }
         case PonyRacerActions.IS_NEWRACE:
             state.isNewrace = action.payload;
