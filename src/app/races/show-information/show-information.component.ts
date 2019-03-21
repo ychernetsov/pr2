@@ -3,7 +3,7 @@ import { RaceModel } from 'src/app/race.model';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import * as PonyRacerActions from '../store/ponyracer.actions';
-import { tap } from "rxjs/operators";
+import { tap, take } from "rxjs/operators";
 import * as fromApp from '../../store/app.reducers';
 import * as fromPonyRacer from '../store/ponyracer.reducers';
 

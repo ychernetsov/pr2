@@ -25,6 +25,7 @@ const initialState: State = {
 }
 
 export function ponyRacerReducer(state = initialState, action: PonyRacerActions.PonyRacerActions) {
+    let newRaces;
     switch(action.type) {
         case PonyRacerActions.ADD_PONY:
             const newPony = new RaceModel(action.payload, 0, state.src);
@@ -34,7 +35,7 @@ export function ponyRacerReducer(state = initialState, action: PonyRacerActions.
             }
         case PonyRacerActions.DELETE_PONY:
             state.races.splice(action.payload, 1);
-            //const newRaces = state.races//.slice()
+            newRaces = state.races.slice()
             return {
                 ...state,
                 races: state.races,
@@ -43,43 +44,53 @@ export function ponyRacerReducer(state = initialState, action: PonyRacerActions.
         case PonyRacerActions.UPDATE_RACESCORE:
             const name = action.payload.name;
             const scores = action.payload.newScore;
-            for(let race of state.races) {
-                if(race.name === name) race.scores = scores; 
+            newRaces = state.races.slice()
+            for(let race of newRaces) {
+                if(race.name === name) {
+                    race.scores = scores; 
+                }
             }
             return {
                 ...state,
-                races: state.races
+                races: newRaces
             }
         case PonyRacerActions.RESET_SCORES:
-            for(let race of state.races) {
+            newRaces = state.races.slice();
+            for(let race of newRaces) {
                 race.scores = 0;
             }
             state.raceCount = 0;
             return {
                 ...state,
-                races: state.races
+                races: newRaces
             }
         case PonyRacerActions.START_RACE:
-            state.raceStatus = true;
-            state.raceCount++;
+            let raceStatus;
+            raceStatus = true;
+            const raceCount = state.raceCount + 1;
             return {
                 ...state,
+                raceStatus: raceStatus,
+                raceCount: raceCount,
                 races: state.races,
                 poniesAreAboutToFinish: state.races.length
             }
         case PonyRacerActions.STOP_RACE:
-            state.raceStatus = false;
+            raceStatus = false;
             const allPonies = state.poniesAreAboutToFinish || state.races.length;
+            const finsihed = state.currentRaces.slice()
             return {
                 ...state,
+                raceStatus: raceStatus,
                 races: state.races,
                 poniesAreAboutToFinish: allPonies - 1,
-                currentRaces: [...state.currentRaces, action.payload]
+                currentRaces: [...finsihed,action.payload]
             }
         case PonyRacerActions.IS_NEWRACE:
-            state.isNewrace = action.payload;
+            const isNewrace = action.payload;
             return {
                 ...state,
+                isNewrace: isNewrace,
                 races: state.races,
                 poniesAreAboutToFinish: null,
                 currentRaces: []
