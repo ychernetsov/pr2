@@ -47,10 +47,6 @@ export class RaceComponent implements OnInit, OnDestroy {
     this.randomColor = this.randomColorBorder();
     this.finishElOffset = this.raceFinishEl.nativeElement.offsetWidth - this.raceFinishEl.nativeElement.childNodes[0].clientWidth;
     this.racesState = this.store.select("raceList");
-    this.racesState.pipe(
-      //take(1),
-      tap()
-    )
     this.subscription = this.racesState.subscribe(races => {
       this.raceLength = races.races.length;
       this.poniesAreAboutToFinish = races.poniesAreAboutToFinish;
